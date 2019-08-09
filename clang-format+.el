@@ -30,6 +30,7 @@
 
 ;;; Code:
 
+(require 'cc-cmds)
 (require 'clang-format)
 (require 'cl-lib)
 

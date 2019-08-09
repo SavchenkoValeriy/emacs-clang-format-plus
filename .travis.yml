@@ -1,0 +1,29 @@
+language: emacs-lisp
+os: linux
+dist: xenial
+sudo: false
+
+env:
+ - EVM_EMACS=emacs-24.3-travis
+ - EVM_EMACS=emacs-24.4-travis
+ - EVM_EMACS=emacs-24.5-travis
+ - EVM_EMACS=emacs-25.1-travis
+ - EVM_EMACS=emacs-25.2-travis
+ - EVM_EMACS=emacs-25.3-travis
+ - EVM_EMACS=emacs-26.1-travis
+ - EVM_EMACS=emacs-26.2-travis
+ - EVM_EMACS=emacs-git-snapshot-travis
+
+addons:
+  apt:
+    packages:
+    - clang-format-3.8
+
+install:
+  - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > travis.sh && source ./travis.sh
+  - evm install $EVM_EMACS --use --skip
+  - cask install
+
+script:
+  - clang-format --version
+  - cask exec ert-runner
