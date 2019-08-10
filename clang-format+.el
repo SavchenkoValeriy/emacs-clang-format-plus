@@ -26,7 +26,9 @@
 
 ;;; Commentary:
 
-;; TODO
+;; Minor mode for applying clang-format automatically on save.
+;; It can also apply clang-format to the modified parts of the region only
+;; and try to be smart about it.
 
 ;;; Code:
 
@@ -48,7 +50,7 @@
   t
   "Format the whole class or function that has been modified.
 
-Makes a difference only when `clang-format+-apply-to-modifications-only' is nil."
+Makes a difference only when `clang-format+-apply-to-modifications-only' is t."
   :type 'boolean
   :group 'clang-format+)
 
