@@ -60,7 +60,9 @@ Makes a difference only when `clang-format+-apply-to-modifications-only' is t."
 
 Clang-format+ adds it both to the beggining and to the end of the region.
 Used only when `clang-format+-apply-to-modified-definition' is nil or
-when not inside of the function.")
+when not inside of the function."
+  :type 'integer
+  :group 'clang-format+)
 
 (defvar clang-format+-saved)
 
@@ -100,15 +102,14 @@ in place."
     (set-marker limit nil)))
 
 (defun clang-format+-before-save ()
-  "Run clang-format on the current buffer."
+  "Run ‘clang-format’ on the current buffer."
   (if clang-format+-apply-to-modifications-only
       (clang-format+-apply-to-modifications)
     (clang-format-buffer)))
 
 (defun clang-format+-apply-to-modifications ()
-  "Apply clang-format to modified parts of the current buffer."
-  (let ((last-end)
-        (processed nil))
+  "Apply ‘clang-format’ to modified parts of the current buffer."
+  (let ((processed nil))
     (clang-format+-map-changes
      (lambda (_prop beg end)
        (setq beg (clang-format+-get-region-beginning beg)
@@ -125,8 +126,7 @@ in place."
        (unless (clang-format+-in-processed processed beg end)
          (clang-format-region beg end)
          ;; ...and remember processed ones
-         (add-to-list 'processed (cons beg end)))
-       (setq last-end end)))))
+         (add-to-list 'processed (cons beg end)))))))
 
 (defun clang-format+-in-processed (processed beg end)
   "Check if the given region BEG END is in PROCESSED.
