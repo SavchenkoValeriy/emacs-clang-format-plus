@@ -5,7 +5,7 @@
 ;; Authors: Valeriy Savchenko <sinmipt@gmail.com>
 ;; URL: http://github.com/SavchenkoValeriy/clang-format+
 ;; Version: 1.0.0
-;; Package-Requires: ((emacs "24.3") (clang-format))
+;; Package-Requires: ((emacs "25.1") (clang-format))
 ;; Keywords: c c++ clang-format
 
 ;; This file is NOT part of GNU Emacs.
