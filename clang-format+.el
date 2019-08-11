@@ -1,11 +1,11 @@
-;;; clang-format+.el --- clang-format minor mode -*- lexical-binding: t; -*-
+;;; clang-format+.el --- Minor mode for automatic clang-format application -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2019 Valeriy Savchenko (GNU/GPL Licence)
 
 ;; Authors: Valeriy Savchenko <sinmipt@gmail.com>
-;; URL: http://github.com/SavchenkoValeriy/clang-format+
+;; URL: https://github.com/SavchenkoValeriy/emacs-clang-format-plus
 ;; Version: 1.0.0
-;; Package-Requires: ((emacs "25.1") (clang-format))
+;; Package-Requires: ((emacs "25.1") (clang-format "20180406.1514"))
 ;; Keywords: c c++ clang-format
 
 ;; This file is NOT part of GNU Emacs.
@@ -22,7 +22,7 @@
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with jeison.
-;; If not, see <http://www.gnu.org/licenses/>.
+;; If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -231,12 +231,12 @@ LENGTH-BEFORE stands for the length of the text before modification."
   :group 'clang-format+
   (if clang-format+-mode
       (progn
-        (add-hook 'after-change-functions 'clang-format+-after-change t t)
-        (add-hook 'before-save-hook 'clang-format+-before-save t t)
-        (add-hook 'after-save-hook 'clang-format+-after-save t t)
-        (add-hook 'before-revert-hook 'clang-format+-before-revert t t)
-        (add-hook 'after-revert-hook 'clang-format+-after-save t t)
-        (add-hook 'edit-server-done-hook 'clang-format+-before-save t t))
+        (add-hook 'after-change-functions #'clang-format+-after-change t t)
+        (add-hook 'before-save-hook #'clang-format+-before-save t t)
+        (add-hook 'after-save-hook #'clang-format+-after-save t t)
+        (add-hook 'before-revert-hook #'clang-format+-before-revert t t)
+        (add-hook 'after-revert-hook #'clang-format+-after-save t t)
+        (add-hook 'edit-server-done-hook #'clang-format+-before-save t t))
     (remove-hook 'after-change-functions 'clang-format+-after-change t)
     (remove-hook 'before-save-hook 'clang-format+-before-save t)
     (remove-hook 'after-save-hook 'clang-format+-after-save t)
