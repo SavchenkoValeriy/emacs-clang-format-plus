@@ -172,11 +172,28 @@ or when modification of the whole definition is not allowed."
 
 (defun clang-format+-inside-of-enclosing-definition-p ()
   "Check if the pointer inside of the definition."
-  (save-excursion
-    (let ((original (point))
-          (start (progn (c-beginning-of-defun) (point)))
-          (end (progn (c-end-of-defun) (point))))
-      (<= start original end))))
+  ;; Adding new functions or classes into namespaces is a normal practice,
+  ;; and we shouldn't reformat the WHOLE namespace because of this.
+  ;; That's why we don't want to consider it as a definition.
+  (unless (clang-format+-inside-of-namespace-p)
+    (save-excursion
+      (let ((original (point))
+            (start (progn (c-beginning-of-defun) (point)))
+            (end (progn (c-end-of-defun) (point))))
+        (<= start original end)))))
+
+(defun clang-format+-inside-of-namespace-p ()
+  "Check if the pointer inside of a namespace."
+  ;; this code is highly inspired by the code
+  ;; from `c-show-syntactic-information'
+  (let* ((syntax-stack (if (boundp 'c-syntactic-context)
+                           ;; Use `c-syntactic-context' in the same way as
+                           ;; `c-indent-line', to be consistent.
+                           c-syntactic-context
+                         (c-save-buffer-state nil
+                           (c-guess-basic-syntax))))
+         (top-level-context (caar syntax-stack)))
+    (equal top-level-context 'innamespace)))
 
 (defun clang-format+-clear-properties ()
   "Clear all clang-format+ text properties in buffer."
