@@ -78,12 +78,6 @@ when not inside of the function."
          (save-restriction
            ,@forms)))))
 
-(defvar clang-format+-presave-coord nil
-  "Saved list of (LINE COLUMN) used to restore point after saving.
-
-This is the key to the virtual spaces preserving indentation mechanism.")
-(make-variable-buffer-local 'clang-format+-presave-coord)
-
 (defun clang-format+-map-changes (func &optional start-position end-position)
   "Call FUNC with each changed region (START-POSITION END-POSITION).
 
@@ -124,9 +118,14 @@ in place."
        ;;
        ;; For this purpose, we check that this region is not processed yet...
        (unless (clang-format+-in-processed processed beg end)
+         ;; no need to track changes made by clang-format
+         (remove-hook 'after-change-functions
+                      'clang-format+-after-change t)
          (clang-format-region beg end)
          ;; ...and remember processed ones
-         (add-to-list 'processed (cons beg end)))))))
+         (add-to-list 'processed (cons beg end))
+         (add-hook 'after-change-functions
+                   #'clang-format+-after-change t t))))))
 
 (defun clang-format+-in-processed (processed beg end)
   "Check if the given region BEG END is in PROCESSED.
@@ -223,23 +222,7 @@ LENGTH-BEFORE stands for the length of the text before modification."
 
 (defun clang-format+-after-save ()
   "Restore trimmed whitespace before point."
-  (clang-format+-clear-properties)
-  ;; go to saved line+col
-  (when clang-format+-presave-coord
-    (let (remaining-lines)
-      (clang-format+-with-save
-       (widen)
-       (goto-char (point-min))
-       (setq remaining-lines
-             (forward-line (1- (car clang-format+-presave-coord)))))
-      (unless (eq remaining-lines 0)
-        (insert (make-string remaining-lines ?\n))))
-    (move-to-column (cadr clang-format+-presave-coord) t)
-    (set-buffer-modified-p nil)))
-
-(defun clang-format+-before-revert ()
-  "Clear `clang-format+-presave-coord'."
-  (setq clang-format+-presave-coord nil))
+  (clang-format+-clear-properties))
 
 ;;;###autoload
 (define-minor-mode clang-format+-mode
@@ -251,13 +234,11 @@ LENGTH-BEFORE stands for the length of the text before modification."
         (add-hook 'after-change-functions #'clang-format+-after-change t t)
         (add-hook 'before-save-hook #'clang-format+-before-save t t)
         (add-hook 'after-save-hook #'clang-format+-after-save t t)
-        (add-hook 'before-revert-hook #'clang-format+-before-revert t t)
         (add-hook 'after-revert-hook #'clang-format+-after-save t t)
         (add-hook 'edit-server-done-hook #'clang-format+-before-save t t))
     (remove-hook 'after-change-functions 'clang-format+-after-change t)
     (remove-hook 'before-save-hook 'clang-format+-before-save t)
     (remove-hook 'after-save-hook 'clang-format+-after-save t)
-    (remove-hook 'before-revert-hook 'clang-format+-before-revert t)
     (remove-hook 'after-revert-hook 'clang-format+-after-save t)
     (remove-hook 'edit-server-done-hook 'clang-format+-before-save t)))
 
