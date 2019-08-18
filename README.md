@@ -1,4 +1,4 @@
-# clang-format+ [![Build Status](https://travis-ci.org/SavchenkoValeriy/emacs-clang-format-plus.svg?branch=master)](https://travis-ci.org/SavchenkoValeriy/emacs-clang-format-plus)
+# clang-format+ [![Build Status](https://travis-ci.org/SavchenkoValeriy/emacs-clang-format-plus.svg?branch=master)](https://travis-ci.org/SavchenkoValeriy/emacs-clang-format-plus) [![MELPA](https://melpa.org/packages/clang-format+-badge.svg)](https://melpa.org/#/clang-format%2B)
 
 ## Description
 
@@ -12,7 +12,9 @@ The existing package ([clang-format.el](https://llvm.org/svn/llvm-project/cfe/tr
 
 ### Install from MELPA
 
-Coming soon, sorry for the inconveniences.
+You can install *clang-format+* from MELPA by simply executing the following command:
+
+<kbd>M-x package-install [RET] clang-format+ [RET]</kbd>
 
 ### Install using Quelpa
 
