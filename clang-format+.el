@@ -58,7 +58,7 @@ Makes a difference only when `clang-format+-apply-to-modifications-only' is t."
   0
   "Number of lines to add to the modified region.
 
-Clang-format+ adds it both to the beggining and to the end of the region.
+Clang-format+ adds it both to the beginning and to the end of the region.
 Used only when `clang-format+-apply-to-modified-definition' is nil or
 when not inside of the function."
   :type 'integer
@@ -110,11 +110,11 @@ in place."
              end (clang-format+-get-region-end end))
        ;; We run clang-format for every little change to the code N times,
        ;; which is exactly N-1 times more than needed.
-       ;; Unfortunately, while clang-format executable accepts many regions
-       ;; as its input, clang-format-region function accepts only one.
+       ;; Unfortunately, while the clang-format executable accepts many regions
+       ;; as its input, the clang-format-region function accepts only one.
        ;;
-       ;; And even though we run it this many times, we don't want
-       ;; at least running it more than once on the same piece of code.
+       ;; And even though we run it this many times, we at least don't want
+       ;; to run it more than once on the same piece of code.
        ;;
        ;; For this purpose, we check that this region is not processed yet...
        (unless (clang-format+-in-processed processed beg end)
@@ -154,7 +154,7 @@ and ends of already processed regions."
                                           fallback-move)
   "Move from POINTER by one of the given move actions and return the new point.
 
-Only returns a new point, not persistently moves there.
+Only returns a new point, not persistently moving there.
 
 DEFINITION-MOVE will be used if POINTER is inside of a definition.
 DEFINITION-MOVE shouldn't take any arguments.
@@ -182,7 +182,7 @@ or when modification of the whole definition is not allowed."
         (<= start original end)))))
 
 (defun clang-format+-inside-of-namespace-p ()
-  "Check if the pointer inside of a namespace."
+  "Check if the pointer is inside of a namespace."
   ;; this code is highly inspired by the code
   ;; from `c-show-syntactic-information'
   (let* ((syntax-stack (if (boundp 'c-syntactic-context)
@@ -204,7 +204,7 @@ or when modification of the whole definition is not allowed."
 (defun clang-format+-after-change (beg end length-before)
   "Remember buffer modification.
 
-Mark text from BEG to END as modification.
+Mark text from BEG to END as modified.
 LENGTH-BEFORE stands for the length of the text before modification."
   (let ((type (if (and (= beg end) (> length-before 0))
                   'delete
