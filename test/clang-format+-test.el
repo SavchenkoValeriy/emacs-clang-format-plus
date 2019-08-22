@@ -2,6 +2,8 @@
 
 (require 'clang-format+)
 
+(setq clang-format+-always-enable t)
+
 (ert-deftest clang-format+:basic-test ()
   (with-temp-buffer
     (c++-mode)

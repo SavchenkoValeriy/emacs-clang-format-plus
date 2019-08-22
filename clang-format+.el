@@ -63,7 +63,20 @@ when not inside of the function."
   :type 'integer
   :group 'clang-format+)
 
+(defcustom clang-format+-always-enable
+  nil
+  "Whether to enable formatting even if no style has been selected.
+
+If nil, only enable formatting if a style has been selected by
+either adding a \".clang-format\" (or \"_clang-format\") file to
+the source tree or by setting `clang-format-style' to something
+else than \"file\". If non-nil, always enable formatting."
+  :type 'boolean
+  :group 'clang-format+)
+
 (defvar clang-format+-saved)
+(defvar clang-format+-enabled)
+(make-variable-buffer-local 'clang-format+-enabled)
 
 (defmacro clang-format+-with-save (&rest forms)
   "Run FORMS with restriction and excursion saved once."
@@ -226,15 +239,21 @@ LENGTH-BEFORE stands for the length of the text before modification."
 ;;;###autoload
 (define-minor-mode clang-format+-mode
   "Run clang-format on save."
-  :lighter " cf+"
+  :lighter (:eval (if clang-format+-enabled " cf+" " cf-"))
   :group 'clang-format+
   (if clang-format+-mode
       (progn
-        (add-hook 'after-change-functions #'clang-format+-after-change t t)
-        (add-hook 'before-save-hook #'clang-format+-before-save t t)
-        (add-hook 'after-save-hook #'clang-format+-after-save t t)
-        (add-hook 'after-revert-hook #'clang-format+-after-save t t)
-        (add-hook 'edit-server-done-hook #'clang-format+-before-save t t))
+        (setq clang-format+-enabled
+              (or clang-format+-always-enable
+                  (not (string= clang-format-style "file"))
+                  (locate-dominating-file "." ".clang-format")
+                  (locate-dominating-file "." "_clang-format")))
+        (when clang-format+-enabled
+          (add-hook 'after-change-functions #'clang-format+-after-change t t)
+          (add-hook 'before-save-hook #'clang-format+-before-save t t)
+          (add-hook 'after-save-hook #'clang-format+-after-save t t)
+          (add-hook 'after-revert-hook #'clang-format+-after-save t t)
+          (add-hook 'edit-server-done-hook #'clang-format+-before-save t t)))
     (remove-hook 'after-change-functions 'clang-format+-after-change t)
     (remove-hook 'before-save-hook 'clang-format+-before-save t)
     (remove-hook 'after-save-hook 'clang-format+-after-save t)
