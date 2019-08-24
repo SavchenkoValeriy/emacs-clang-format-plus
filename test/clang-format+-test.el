@@ -26,7 +26,7 @@
                    "\nclass A    {\n\n  int foo(){\n\n  };\n};\n"))))
 
 (ert-deftest clang-format+:apply-to-all-test ()
-  (let ((clang-format+-apply-to-modifications-only nil)
+  (let ((clang-format+-context 'buffer)
         (clang-format-style "llvm"))
     (with-temp-buffer
       (switch-to-buffer (current-buffer))
@@ -40,7 +40,7 @@
                      "\nclass A {\npublic:\n  int foo(){\n\n  };\n};\n")))))
 
 (ert-deftest clang-format+:no-definition-test ()
-  (let ((clang-format+-apply-to-modified-definition nil))
+  (let ((clang-format+-context 'modification))
     (with-temp-buffer
       (switch-to-buffer (current-buffer))
       (insert "\nclass A    {\n\npublic:\n\n};\n")
