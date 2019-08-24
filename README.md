@@ -66,9 +66,11 @@ If you don't want to enable formatting for all projects with a `.clang-format`/`
 
 *clang-format+* defines these variables that the user can tweak:
 
-- `clang-format+-apply-to-modifications-only` defines whether **clang-format** should be applied to the whole buffer or only to the modified parts of it (`t` by default)
-- `clang-format+-apply-to-modified-definition` defines whether **clang-format** should format all definitions (functions/classes/etc.) containing modifications (`t` by default). *clang-format+* enlarges modified areas to their enclosing definitions so the formatting looks more consistent.
-- `clang-format+-offset-modified-region` defines a number of extra lines added *before* and *after* modified regions to be formatted (`0` by default). If `clang-format+-apply-to-modified-definition` is `t` it will be applied only when outside of definitions.
+- `clang-format+-context` defines how much context to reformat after modifications. Possible values:
+    * `'buffer`: Reformat the whole buffer.
+    * `'definition`: Reformat the enclosing definition (class/function/etc., but not namespace). This is the default.
+    * `'modification`: Reformat only the modified parts.
+- `clang-format+-offset-modified-region` defines the number of extra lines to reformat outside of a modified region both *before* and *after* (`0` by default). If `clang-format+-context` is `'definition'`, the region will only be extended for modifications outside of definitions.
 - `clang-format+-always-enable` defines whether to enable formatting even if a style hasn't been selected. If `clang-format+-always-enable` is `nil` (which is the default), formatting will be enabled if there is a `.clang-format`/`_clang-format` file in the source tree or if `clang-format-style` is set to something else than "file". If non-`nil`, formatting will always be enabled.
 
 ## Contribute
